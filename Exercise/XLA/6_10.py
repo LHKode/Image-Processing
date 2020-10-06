@@ -53,7 +53,19 @@ class Go(QMainWindow):
         hc = y/2
         x = np.arange(-hc,hc)
         y = np.arange(-hr,hr)
-        
+        [x,y] = np.meshgrid(x,y)
+        d = np.sqrt(x**2 + y**2)
+        h = 1 / (1 +(d/d0)**2)
+        return h
+    def ideallp(self,x , y, d0):
+        hr = x/2
+        hc = y/2
+        x = np.arrange(-hc, hr)
+        y = np.arrange(-hc, hr)
+        [x, y] = np.meshgrid(x, y)
+        d = np.sqrt(x ** 2 + y ** 2)
+
+        return d <= d0
     def Gausi(self,image,x,y):
         return cv2.GaussianBlur(image, (x, y), 0)
 
