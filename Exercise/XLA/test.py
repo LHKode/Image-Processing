@@ -1,16 +1,19 @@
-import cv2
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 import numpy as np
 
-image = cv2.imread('Anh-phong-canh.jpg')
-imgMean = np.mean(image)
-imgStd = np.std(image)
 
-outMean = 1
-outStd = 0.5
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
-scale = outStd / imgStd
-shift = outMean - scale *imgMean
-imgLinear = shift +scale*image
-cv2.imshow('original',image)
-cv2.imshow('linear',imgLinear)
-cv2.waitKey(0)
+x =[1,2,3,4,5,6,7,8,9,10]
+y =[5,6,2,3,13,4,1,2,4,8]
+z = np.zeros(10)
+
+dx = np.ones(10)
+dy = np.ones(10)
+dz = [1,2,3,4,5,6,7,8,9,9]
+
+ax.bar3d(x, y, z, dx, dy, dz, color='red')
+
+plt.show()

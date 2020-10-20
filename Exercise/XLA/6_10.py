@@ -55,7 +55,7 @@ class Go(QMainWindow):
         y = np.arange(-hr,hr)
         [x,y] = np.meshgrid(x,y)
         d = np.sqrt(x**2 + y**2)
-        h = 1 / (1 +(d/d0)**2)
+        h = 1 / (1 +(d/d0)**(2*n))
         return h
     def ideallp(self,x , y, d0):
         hr = x/2
