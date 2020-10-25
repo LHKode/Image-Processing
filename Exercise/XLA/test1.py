@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-img = cv2.imread('chess.png',0)
+img = cv2.imread('hw4_radiograph_2.jpg',0)
 img_resize = cv2.resize(img, (600,600))
 # gauss = np.random.normal(0,1,img.size)
 # gauss = gauss.reshape(img.shape[0], img.shape[1], img.shape[2]).astype('uint8')
