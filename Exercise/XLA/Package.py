@@ -1,14 +1,46 @@
 import os
+import sys
 import cv2
 import math
 import numpy as np
+from PyQt5 import uic, QtGui
 from matplotlib import pyplot as plt
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
-class Go():
-    def __init__(self,Img):
-        super(Go,self).__init__()
-        self.Image = cv2.imread(Img)
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super(MyWindow,self).__init__()
+        uic.loadUi('mid.ui',self)
+        # Open file from folder
+        layout = QVBoxLayout()
+        self.browseImg = self.findChild(QPushButton, 'browseBtn')
+        self.browseImg.clicked.connect(self.getfile)
+        layout.addWidget(self.browseImg)
+        self.labelImg = self.findChild(QLabel, 'ImageLabel')
 
+        self.sizeImg = self.findChild(QComboBox, 'sizeCbb')
+        self.typeImg = self.findChild(QComboBox, 'typeCbb')
+        self.filterImg = self.findChild(QPushButton, 'filBtn')
+        self.filterImg.clicked.connect(self.type)
+        self.show()
+
+    def getfile(self):
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
+        self.imagePath = self.fname[0]
+        self.pixmap = QPixmap(self.imagePath)
+        self.labelImg.setPixmap(QPixmap(self.pixmap))
+    def type(self):
+        value = self.size.currentIndex()*2+1
+        if(self.type.currentIndex() == 1):
+            image = cv2.blur(self.imagePath, (value,value))
+        elif(self.type.currentIndex() == 2):
+            image = cv2.GaussianBlur(self.imagePath, (value,value),0)
+        elif(self.type.currentIndex() == 3):
+            image = cv2.medianBlur(self.imagePath,value)
+        pixmap = QPixmap(image)
+        self.labelImg.setPixmap(pixmap)
     def light(self, Img,value):
         return Img+value
     def dark(self,Img,value):
@@ -227,7 +259,9 @@ class Go():
         Image_prewitt = sum.astype(np.unit8)
         return Image_prewitt
 
-
+app = QApplication(sys.argv)
+go = MyWindow()
+app.exec_()
 
 
 
