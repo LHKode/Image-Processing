@@ -23,24 +23,29 @@ class MyWindow(QMainWindow):
         self.sizeImg = self.findChild(QComboBox, 'sizeCbb')
         self.typeImg = self.findChild(QComboBox, 'typeCbb')
         self.filterImg = self.findChild(QPushButton, 'filBtn')
+
         self.filterImg.clicked.connect(self.type)
+
         self.show()
 
     def getfile(self):
-        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
-        self.imagePath = self.fname[0]
-        self.pixmap = QPixmap(self.imagePath)
-        self.labelImg.setPixmap(QPixmap(self.pixmap))
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
+        imagePath = fname[0]
+        self.ffImage = imagePath
+        pixmap = QPixmap(imagePath)
+        self.labelImg.setPixmap(QPixmap(pixmap))
     def type(self):
-        value = self.size.currentIndex()*2+1
-        if(self.type.currentIndex() == 1):
-            image = cv2.blur(self.imagePath, (value,value))
-        elif(self.type.currentIndex() == 2):
-            image = cv2.GaussianBlur(self.imagePath, (value,value),0)
-        elif(self.type.currentIndex() == 3):
-            image = cv2.medianBlur(self.imagePath,value)
-        pixmap = QPixmap(image)
-        self.labelImg.setPixmap(pixmap)
+        image = self.ffImage
+        value = self.sizeImg.currentIndex()*2+1
+        if(self.typeImg.currentIndex() == 1):
+            image = cv2.blur(self.ffImage, (value,value))
+        elif(self.typeImg.currentIndex() == 2):
+            image = cv2.GaussianBlur(self.ffImage, (value,value),0)
+        elif(self.typeImg.currentIndex() == 3):
+            image = cv2.medianBlur(self.ffImage,value)
+        # cv2.imshow('test',image)
+        self.labelImg.setPixmap(QPixmap(image))
+
     def light(self, Img,value):
         return Img+value
     def dark(self,Img,value):
