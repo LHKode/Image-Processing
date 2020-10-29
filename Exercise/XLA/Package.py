@@ -13,6 +13,8 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow,self).__init__()
         uic.loadUi('mid.ui',self)
+        self.width = 941
+        self.height = 511
         # Open file from folder
         layout = QVBoxLayout()
         self.browseImg = self.findChild(QPushButton, 'browseBtn')
@@ -23,17 +25,34 @@ class MyWindow(QMainWindow):
         self.sizeImg = self.findChild(QComboBox, 'sizeCbb')
         self.typeImg = self.findChild(QComboBox, 'typeCbb')
         self.filterImg = self.findChild(QPushButton, 'filBtn')
+        self.blurImg = self.findChild(QPushButton, 'blurBtn')
+        self.sharpImg = self.findChild(QPushButton, 'sharpBtn')
+        self.linearImg = self.findChild(QPushButton, 'linearBtn')
+        self.logImg = self.findChild(QPushButton, 'logBtn')
+        self.gammaImg = self.findChild(QPushButton, 'gammaBtn')
+        self.salt_pepperImg = self.findChild(QPushButton, 'saltpepBtn')
+        self.sobelImg = self.findChild(QPushButton, 'sobelBtn')
+        self.prewittImg = self.findChild(QPushButton, 'prewittBtn')
+        self.otsuImg = self.findChild(QPushButton, 'otsuBtn')
+        self.binaryImg = self.findChild(QPushButton,'binaryBtn')
+        self.truncImg = self.findChild(QPushButton, 'truncBtn')
+        self.tozeroImg = self.findChild(QPushButton, 'tozeroBtn')
 
         self.filterImg.clicked.connect(self.type)
-
+        self.blurImg.clicked.connect(self.blur)
+        self.sharpImg.clicked.connect(self.sharpen)
         self.show()
-
     def getfile(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.png *.gif)')
         imagePath = fname[0]
         self.ffImage = imagePath
-        pixmap = QPixmap(imagePath)
-        self.labelImg.setPixmap(QPixmap(pixmap))
+        self.labelImg.setPixmap(QPixmap(imagePath))
+        # self.resize(pixmap.width(), pixmap.height())
+    def cv_to_pixmap(self,cvImg):
+        height, width, channel = cvImg.shape
+        bytesPerLine = 3 * width
+        qImg = QImage(cvImg.data, width, height, bytesPerLine, QImage.Format_RGB888)
+        return qImg
     def type(self):
         image = self.ffImage
         value = self.sizeImg.currentIndex()*2+1
@@ -72,7 +91,16 @@ class MyWindow(QMainWindow):
         equal_hist_img = cv2.equalizeHist(Img)
         res = np.hstack((Img,equal_hist_img))
         return res
-
+    def Ver_Ho(self):
+        matrix_X = np.array([[0,0,0],
+                          [-1,2,-1],
+                          [0,0,0]])
+        matrix_Y = np.array([[0,-1,0],
+                             [0,2,0],
+                             [0,-1,0]])
+        Gx_image = cv2.filter2D(self.resize_img,-1,matrix_X)
+        GY_image = cv2.filter2D(self.resize_img,-1,matrix_Y)
+        XY_image = np.arctan(GY_image+Gx_image)
     def filter2D(self, Img, Matrix):
         ma = np.array([[0, 0, 0],
                        [1, 1, 1],
@@ -97,17 +125,21 @@ class MyWindow(QMainWindow):
     def gaussian_blur(self,Img,ksize=(5,5)):
         gau_blur_img = cv2.GaussianBlur(Img,ksize=ksize,dst=0)
         return gau_blur_img
-    def blur(self,Img,ksize=(5,5)):
+    def blur(self):
+        ksize = (5, 5)
+        Img = self.ffImage
         blur_img = cv2.blur(Img,ksize=ksize)
-        return blur_img
+        self.labelImg.setPixmap(QPixmap(blur_img))
     def median(self,Img,ksize=(5,5)):
         median_img = cv2.medianBlur(Img,ksize=ksize,dst=0)
-    def sharpen(self,Img):
+    def sharpen(self):
+        Img = self.ffImage
         filter = np.array([[-1, -1, -1],
                            [-1, 9, -1],
                            [-1, -1, -1]])
         sharpen_img = cv2.filter2D(Img,-1,filter)
-        return sharpen_img
+        qimg = self.cv_to_pixmap(sharpen_img)
+        self.labelImg.setPixmap(QPixmap(qimg))
 
     def ideal_lp(self,Img):
         sx, sy = Img.shape[:2]
