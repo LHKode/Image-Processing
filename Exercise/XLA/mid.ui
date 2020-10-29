@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1103</width>
+    <width>1023</width>
     <height>706</height>
    </rect>
   </property>
@@ -17,99 +17,14 @@
    <widget class="QSlider" name="brightness">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>630</y>
+      <x>350</x>
+      <y>100</y>
       <width>241</width>
       <height>21</height>
      </rect>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>40</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Log</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Gamma</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Filter</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Histogram</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Text</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>10</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Sobel,prewitt</string>
     </property>
    </widget>
    <widget class="QComboBox" name="typeCbb">
@@ -167,33 +82,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>20</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Size</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_8">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>20</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Type&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="histogram">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -206,117 +95,11 @@
      <string>Show Histogram</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_4">
+   <widget class="QPushButton" name="linearBtn">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>40</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Sobel</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Prewitt</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>686</x>
+      <x>400</x>
       <y>10</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Adaptive Threshold&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_5">
-    <property name="geometry">
-     <rect>
-      <x>710</x>
-      <y>40</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>3</number>
-    </property>
-    <item>
-     <property name="text">
-      <string>Binary</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Trunc</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Tozero</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Otsu</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>AdaptiveMean</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>AdaptiveGauss</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QComboBox" name="comboBox_6">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>40</y>
-      <width>69</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Blur</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Sharp</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Salt_Pepper</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>40</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -342,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>90</y>
+      <y>140</y>
       <width>941</width>
       <height>511</height>
      </rect>
@@ -354,7 +137,7 @@
    <widget class="QPushButton" name="filBtn">
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>910</x>
       <y>30</y>
       <width>75</width>
       <height>41</height>
@@ -364,6 +147,175 @@
      <string>Filter</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="blurBtn">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>40</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Blur</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sharpBtn">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sharp</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saltpepBtn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Salt_Pepper</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="logBtn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>10</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Log</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="gammaBtn">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>40</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Gamma</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sobelBtn">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>40</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sobel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="prewittBtn">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Prewitt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="otsuBtn">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>10</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Otsu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="binaryBtn">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>40</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Binary</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="truncBtn">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Trunc</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="tozeroBtn">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>70</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tozero</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="adapGauss">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>40</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Adaptive Gaussian</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="adapMean">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>10</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Adaptive Mean</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -371,7 +323,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1103</width>
+     <width>1023</width>
      <height>21</height>
     </rect>
    </property>
