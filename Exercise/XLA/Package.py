@@ -29,7 +29,7 @@ class MyWindow(QMainWindow):
         self.show()
 
     def getfile(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif *.png)')
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
         imagePath = fname[0]
         self.ffImage = imagePath
         pixmap = QPixmap(imagePath)
