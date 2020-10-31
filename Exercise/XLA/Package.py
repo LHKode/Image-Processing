@@ -13,7 +13,7 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow,self).__init__()
         uic.loadUi('mid.ui',self)
-        self.imgPath = 'Anh-phong-canh.jpg'
+        # self.imgPath = cv2.imread('Anh-phong-canh.jpg')
         # Open file from folder
         layout = QVBoxLayout()
         self.browseImg = self.findChild(QPushButton, 'browseBtn')
@@ -50,6 +50,84 @@ class MyWindow(QMainWindow):
         #Plotting Hist
         self.plotHistBtn = self.findChild(QPushButton,'plotHistBtn')
         self.plotHistBtn.clicked.connect(self.plotting_histogram)
+        #Equalize Histogram
+        self.equalHistBtn = self.findChild(QPushButton,'equalHistBtn')
+        self.equalHistBtn.clicked.connect(self.equalize_histogram)
+        # Blur
+        self.blurBtn = self.findChild(QPushButton,'blurBtn')
+        self.ksizeValue = self.findChild(QComboBox, 'valueBlur')
+        self.blurBtn.clicked.connect(self.blur)
+        # Gaussian Blur
+        self.gaussblurBtn = self.findChild(QPushButton, 'gaussBlurBtn')
+        self.gaussValue = self.findChild(QComboBox, 'gBlurValue')
+        self.gaussblurBtn.clicked.connect(self.gaussian_blur)
+        # Median Blur
+        self.medianBlurBtn = self.findChild(QPushButton, 'medianBtn')
+        self.medianValue = self.findChild(QComboBox, 'mBlurValue')
+        self.medianBlurBtn.clicked.connect(self.median)
+        # Sharpen
+        self.sharpBtn = self.findChild(QPushButton,'sharpBtn')
+        self.sharpBtn.clicked.connect(self.sharpen)
+        # Ideal Low_pass
+        # Error
+        self.idealLow = self.findChild(QPushButton, 'iLowBtn')
+        self.idealLow.clicked.connect(self.ideal_lp)
+        # Butterworth Low_pass
+        # Error
+        self.buttLow = self.findChild(QPushButton,'buttLowBtn')
+        self.buttLow.clicked.connect(self.butterworth_lp)
+
+        # Gaussian Low_pass
+        # Error
+        self.gaussLow = self.findChild(QPushButton,'gLowBtn')
+        self.gaussLow.clicked.connect(self.gaussian_lp)
+        # Ideal High_pass
+        # Error
+        self.idealHigh = self.findChild(QPushButton, 'iHighBtn')
+        self.idealHigh.clicked.connect(self.ideal_hp)
+        # Butterworth High_pass
+        # Error
+        self.buttHigh = self.findChild(QPushButton, 'buttHighBtn')
+        self.buttHigh.clicked.connect(self.butterworth_hp)
+        # Gaussian High_pass
+        # Error
+        self.gaussHigh = self.findChild(QPushButton,'gHighBtn')
+        self.gaussHigh.clicked.connect(self.gaussian_hp)
+        # Binary Threshold
+        self.binaryThreshold = self.findChild(QPushButton, 'binaryBtn')
+        self.binaryValue = self.findChild(QSpinBox, 'binValue')
+        self.binaryThreshold.clicked.connect(self.threshold_binary)
+        # Trunc Threshold
+        self.truncThreshold = self.findChild(QPushButton,'truncBtn')
+        self.truncValue = self.findChild(QSpinBox, 'truncValue')
+        self.truncThreshold.clicked.connect(self.threshold_trunc)
+        # Tozero Threshold
+        self.tozeroThreshold = self.findChild(QPushButton, 'tozeroBtn')
+        self.tozeroValue = self.findChild(QSpinBox,'tozeroValue')
+        self.tozeroThreshold.clicked.connect(self.threshold_tozero)
+        # Otsu Threshold
+        # Error
+        self.otsuThreshold = self.findChild(QPushButton, 'otsuBtn')
+        self.otsuValue = self.findChild(QSpinBox, 'otsuValue')
+        self.otsuThreshold.clicked.connect(self.threshold_otsu)
+        # Adap Mean Threshold
+        # Error
+        self.adapMeanBtn = self.findChild(QPushButton, 'adapMean')
+        self.adapMeanBtn.clicked.connect(self.threshold_mean_C)
+        # Adap Gauss Threshold
+        # Error
+        self.adapGauBtn = self.findChild(QPushButton, 'adapGauss')
+        self.adapGauBtn.clicked.connect(self.threshold_gaussian_C)
+        # Sobel
+        # Error
+        self.sobelBtn = self.findChild(QPushButton, 'sobelBtn')
+        self.sobelBtn.clicked.connect(self.sobel)
+        # Prewitt
+        # Error
+        self.prewittButton = self.findChild(QPushButton,'prewittBtn')
+        self.prewittButton.clicked.connect(self.prewitt)
+
+
 
         self.show()
     def cv2_to_pixmap(self, img):
@@ -58,23 +136,23 @@ class MyWindow(QMainWindow):
         qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888)
         return qImg
     def getfile(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'c\\','Image files(*.jpg *.gif)')
         self.imgPath = fname[0]
         self.ffImage = self.imgPath
         pixmap = QPixmap(self.imgPath)
         self.img = cv2.imread(self.imgPath)
         self.imgOriginal.setPixmap(QPixmap(pixmap))
-    def type(self):
-        image = self.ffImage
-        value = self.sizeImg.currentIndex()*2+1
-        if(self.typeImg.currentIndex() == 1):
-            image = cv2.blur(self.ffImage, (value,value))
-        elif(self.typeImg.currentIndex() == 2):
-            image = cv2.GaussianBlur(self.ffImage, (value,value),0)
-        elif(self.typeImg.currentIndex() == 3):
-            image = cv2.medianBlur(self.ffImage,value)
-        # cv2.imshow('test',image)
-        self.labelImg.setPixmap(QPixmap(image))
+    # def type(self):
+    #     image = self.ffImage
+    #     value = self.sizeImg.currentIndex()*2+1
+    #     if(self.typeImg.currentIndex() == 1):
+    #         image = cv2.blur(self.ffImage, (value,value))
+    #     elif(self.typeImg.currentIndex() == 2):
+    #         image = cv2.GaussianBlur(self.ffImage, (value,value),0)
+    #     elif(self.typeImg.currentIndex() == 3):
+    #         image = cv2.medianBlur(self.ffImage,value)
+    #     # cv2.imshow('test',image)
+    #     self.labelImg.setPixmap(QPixmap(image))
 
     def light(self):
         Img = cv2.imread(self.imgPath)
@@ -120,12 +198,15 @@ class MyWindow(QMainWindow):
         Img = cv2.imread(self.imgPath)
         plt.hist(Img.ravel(),256,[0,256])
         plt.show()
-    def equal_histogram(self,Img):
+    def equalize_histogram(self):
+        Img = cv2.imread(self.imgPath)
         equal_hist_img = cv2.equalizeHist(Img)
         res = np.hstack((Img,equal_hist_img))
-        return res
+        plt.hist(equal_hist_img.ravel(),256,[0,256])
+        plt.show()
 
-    def filter2D(self, Img, Matrix):
+    def filter2D(self, Matrix):
+        Img = cv2.imread(self.imgPath)
         ma = np.array([[0, 0, 0],
                        [1, 1, 1],
                        [0, 0, 0]])
@@ -146,22 +227,35 @@ class MyWindow(QMainWindow):
         reImg = cv2.filter2D(Img, -1, ma / Matrix)
         return reImg
 
-    def gaussian_blur(self,Img,ksize=(5,5)):
-        gau_blur_img = cv2.GaussianBlur(Img,ksize=ksize,dst=0)
-        return gau_blur_img
-    def blur(self,Img,ksize=(5,5)):
-        blur_img = cv2.blur(Img,ksize=ksize)
-        return blur_img
-    def median(self,Img,ksize=(5,5)):
-        median_img = cv2.medianBlur(Img,ksize=ksize,dst=0)
-    def sharpen(self,Img):
+    def gaussian_blur(self):
+        Img = cv2.imread(self.imgPath)
+        value = int(self.gaussValue.currentText())
+        gau_blur_img = cv2.GaussianBlur(Img,(value,value),0)
+        qImg = self.cv2_to_pixmap(gau_blur_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def blur(self):
+        Img = cv2.imread(self.imgPath)
+        value = int(self.ksizeValue.currentText())
+        blur_img = cv2.blur(Img,(value,value))
+        qImg = self.cv2_to_pixmap(blur_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def median(self):
+        Img = cv2.imread(self.imgPath)
+        value = int(self.medianValue.currentText())
+        median_img = cv2.medianBlur(Img, value, 0)
+        qImg = self.cv2_to_pixmap(median_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def sharpen(self):
+        Img = cv2.imread(self.imgPath)
         filter = np.array([[-1, -1, -1],
                            [-1, 9, -1],
                            [-1, -1, -1]])
         sharpen_img = cv2.filter2D(Img,-1,filter)
-        return sharpen_img
+        qImg = self.cv2_to_pixmap(sharpen_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
-    def ideal_lp(self,Img):
+    def ideal_lp(self):
+        Img = cv2.imread(self.imgPath)
         sx, sy = Img.shape[:2]
         x = np.arange(-(sx) / 2, (sx) / 2)  # tâm là (0,0)
         y = np.arange(-(sy) / 2, (sy) / 2)
@@ -180,9 +274,13 @@ class MyWindow(QMainWindow):
         g = np.fft.fftshift(np.fft.fft2(Img))  # fft and shift to center
         img_apply = g * H  # apply filter
         img_ideal_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
-        img_ideal_lp = np.uint8(img_ideal_lp)
-        return img_ideal_lp
-    def butterworth_lp(self,Img,d0=50,n=2):
+        img_ideal = np.uint8(img_ideal_lp)
+        qImg = self.cv2_to_pixmap(img_ideal)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def butterworth_lp(self):
+        d0 = 50
+        n = 2
+        Img = cv2.imread(self.imgPath)
         sx, sy = Img.shape[:2]
         x = np.arange(-sx / 2, sx / 2)  # tâm là (0,0)
         y = np.arange(-sy / 2, sy / 2)
@@ -199,8 +297,11 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_butterworth_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_butterworth_lp = np.uint8(img_butterworth_lp)
-        return img_butterworth_lp
-    def gaussian_lp(self,Img,sigma=50):
+        qImg = self.cv2_to_pixmap(img_butterworth_lp)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def gaussian_lp(self):
+        Img = cv2.imread(self.imgPath)
+        sigma = 50
         sx, sy = Img.shape[:2]
         x = np.arange(-sy / 2, sy / 2)
         y = np.arange(-sx / 2, sx / 2)  # tâm là (0,0)
@@ -214,9 +315,10 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_gaussian_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_gaussian_lp = np.uint8(img_gaussian_lp)
-        return img_gaussian_lp
-
-    def ideal_hp(self,Img):
+        qImg = self.cv2_to_pixmap(img_gaussian_lp)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def ideal_hp(self):
+        Img = cv2.imread(self.imgPath)
         sx, sy = Img.shape[:2]
         x = np.arange(-(sx) / 2, (sx) / 2)  # tâm là (0,0)
         y = np.arange(-(sy) / 2, (sy) / 2)
@@ -236,8 +338,12 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_ideal_hp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_ideal_hp = np.uint8(img_ideal_hp)
-        return img_ideal_hp
-    def butterworth_hp(self,Img,d0=50,n=2):
+        qImg = self.cv2_to_pixmap(img_ideal_hp)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def butterworth_hp(self):
+        Img = cv2.imread(self.imgPath)
+        d0 =50
+        n = 2
         sx, sy = Img.shape[:2]
         x = np.arange(-sx / 2, sx / 2)  # tâm là (0,0)
         y = np.arange(-sy / 2, sy / 2)
@@ -253,9 +359,13 @@ class MyWindow(QMainWindow):
         g = np.fft.fftshift(np.fft.fft2(Img))  # fft and shift to center
         img_apply = g * H  # apply filter
         img_butterworth_hp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
-        img_butterworth_hp = np.uint8(img_butterworth_hp)
-        return img_butterworth_hp
-    def gaussian_hp(self,Img,d0=50,sigma =50):
+        # img_butterworth_hp = np.uint8(img_butterworth_hp)
+        qpImg = self.cv2_to_pixmap(img_butterworth_hp)
+        self.imgRes.setPixmap(QPixmap(qpImg))
+    def gaussian_hp(self):
+        Img = cv2.imread(self.imgPath)
+        sigma = 50
+        d0 = 50
         sx, sy = Img.shape[:2]
         x = np.arange(-sx / 2, sx / 2)  # tâm là (0,0)
         y = np.arange(-sy / 2, sy / 2)
@@ -269,29 +379,47 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_gaussian_hp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_gaussian_hp = np.uint8(img_gaussian_hp <= d0)
-        return img_gaussian_hp
+        qImg = self.cv2_to_pixmap(img_gaussian_hp)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
-    def threshold_binary(self,Img):
-        ret, img_binary = cv2.threshold(Img, 127, 255, cv2.THRESH_BINARY)
-        return img_binary
-    def threshold_tozero(self,Img):
-        ret, img_tozero = cv2.threshold(Img, 127, 255, cv2.THRESH_TOZERO)
-        return img_tozero
-    def threshold_trunc(self,Img):
-        ret, img_trunc = cv2.threshold(Img, 127, 255, cv2.THRESH_TRUNC)
-        return img_trunc
-    def threshold_otsu(self,Img):
-        ret, img_otsu = cv2.threshold(Img, 0, 255, cv2.THRESH_OTSU)
-        return img_otsu
-    def threshold_mean_C(self,Img):
+    def threshold_binary(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.binaryValue.value()
+        ret, img_binary = cv2.threshold(Img, value, 255, cv2.THRESH_BINARY)
+        qImg = self.cv2_to_pixmap(img_binary)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_tozero(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.tozeroValue.value()
+        ret, img_tozero = cv2.threshold(Img, value, 255, cv2.THRESH_TOZERO)
+        qImg = self.cv2_to_pixmap(img_tozero)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_trunc(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.truncValue.value()
+        ret, img_trunc = cv2.threshold(Img, value, 255, cv2.THRESH_TRUNC)
+        qImg = self.cv2_to_pixmap(img_trunc)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_otsu(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.otsuValue.value()
+        ret, img_otsu = cv2.threshold(Img, value, 255, cv2.THRESH_OTSU)
+        qImg = self.cv2_to_pixmap(img_otsu)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_mean_C(self):
+        Img = cv2.imread(self.imgPath)
         img_threshold = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
-                                              cv2.THRESH_BINARY, 11, 2)
-        return img_threshold
-    def threshold_gaussian_C(self,Img):
+                                              cv2.THRESH_BINARY,11, 2)
+        qImg = self.cv2_to_pixmap(img_threshold)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_gaussian_C(self):
+        Img = cv2.imread(self.imgPath)
         img_gaussian = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
-                                             cv2.THRESH_BINARY, 11, 2)
-        return img_gaussian
-    def sobel(self,Img):
+                                             cv2.THRESH_BINARY,11, 2)
+        qImg = self.cv2_to_pixmap(img_gaussian)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def sobel(self):
+        Img = cv2.imread(self.imgPath)
         hx = np.array([[1,0,-1],
                        [2,0,-2],
                        [1,0,-1]])
@@ -302,8 +430,10 @@ class MyWindow(QMainWindow):
         sobelY = cv2.Sobel(Img, cv2.CV_8U,0,1,hy)
         sum = np.abs(sobelX) + np.abs(sobelY)
         Image_sobel = sum.astype(np.unit8)
-        return Image_sobel
+        qImg = self.cv2_to_pixmap(Image_sobel)
+        self.imgRes.setPixmap(QPixmap(qImg))
     def prewitt(self,Img):
+        Img = cv2.imread(self.imgPath)
         hx = np.array([[-1,0,1],
                        [-1,0,1],
                        [-1,0,1]])
@@ -314,7 +444,8 @@ class MyWindow(QMainWindow):
         prewittY = cv2.filter2D(Img, -1, hy)
         sum = np.abs(prewittX) + np.abs(prewittY)
         Image_prewitt = sum.astype(np.unit8)
-        return Image_prewitt
+        qImg = self.cv2_to_pixmap(Image_prewitt)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
 app = QApplication(sys.argv)
 go = MyWindow()
