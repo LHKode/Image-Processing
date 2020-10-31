@@ -13,27 +13,57 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow,self).__init__()
         uic.loadUi('mid.ui',self)
+        self.imgPath = 'Anh-phong-canh.jpg'
         # Open file from folder
         layout = QVBoxLayout()
         self.browseImg = self.findChild(QPushButton, 'browseBtn')
         self.browseImg.clicked.connect(self.getfile)
         layout.addWidget(self.browseImg)
-        self.labelImg = self.findChild(QLabel, 'ImageLabel')
 
-        self.sizeImg = self.findChild(QComboBox, 'sizeCbb')
-        self.typeImg = self.findChild(QComboBox, 'typeCbb')
-        self.filterImg = self.findChild(QPushButton, 'filBtn')
+        self.imgOriginal = self.findChild(QLabel, 'imageOriginal')
+        self.imgRes = self.findChild(QLabel,'imageResult')
 
-        self.filterImg.clicked.connect(self.type)
+        #Light
+        self.addBtn = self.findChild(QPushButton,'addBtn')
+        self.addValue = self.findChild(QSpinBox,'addValue')
+        self.addBtn.clicked.connect(self.light)
+        #Sub
+        self.subBtn = self.findChild(QPushButton, 'subBtn')
+        self.subValue = self.findChild(QSpinBox, 'subValue')
+        self.subBtn.clicked.connect(self.dark)
+        #Mul
+        self.mulBtn = self.findChild(QPushButton, 'mulBtn')
+        self.mulValue = self.findChild(QSpinBox, 'mulValue')
+        self.mulBtn.clicked.connect(self.multiple)
+        #Log
+        self.logBtn = self.findChild(QPushButton,'logBtn')
+        self.logBtn.clicked.connect(self.log)
+        #Gamma
+        self.gammaBtn = self.findChild(QPushButton,'gammaBtn')
+        self.gammaValue = self.findChild(QSpinBox,'gammaValue')
+        self.gammaBtn.clicked.connect(self.gamma)
+        #Power
+        self.powerBtn = self.findChild(QPushButton,'powerBtn')
+        self.gammaValueP = self.findChild(QSpinBox,'gammaValueP')
+        self.cValueP = self.findChild(QSpinBox,'cValueP')
+        self.powerBtn.clicked.connect(self.power)
+        #Plotting Hist
+        self.plotHistBtn = self.findChild(QPushButton,'plotHistBtn')
+        self.plotHistBtn.clicked.connect(self.plotting_histogram)
 
         self.show()
-
+    def cv2_to_pixmap(self, img):
+        height, width, channel = img.shape
+        bytesPerLine = 3 * width
+        qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+        return qImg
     def getfile(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:\\','Image files(*.jpg *.gif)')
-        imagePath = fname[0]
-        self.ffImage = imagePath
-        pixmap = QPixmap(imagePath)
-        self.labelImg.setPixmap(QPixmap(pixmap))
+        self.imgPath = fname[0]
+        self.ffImage = self.imgPath
+        pixmap = QPixmap(self.imgPath)
+        self.img = cv2.imread(self.imgPath)
+        self.imgOriginal.setPixmap(QPixmap(pixmap))
     def type(self):
         image = self.ffImage
         value = self.sizeImg.currentIndex()*2+1
@@ -46,26 +76,48 @@ class MyWindow(QMainWindow):
         # cv2.imshow('test',image)
         self.labelImg.setPixmap(QPixmap(image))
 
-    def light(self, Img,value):
-        return Img+value
-    def dark(self,Img,value):
-        return Img+value
-    def multiple(self,Img,value):
-        return Img*value
-    def log(self,Img):
+    def light(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.addValue.value()
+        resImg = Img+value
+        qImg = self.cv2_to_pixmap(resImg)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def dark(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.subValue.value()
+        resImg = Img - value
+        qImg = self.cv2_to_pixmap(resImg)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def multiple(self):
+        Img = cv2.imread(self.imgPath)
+        value = self.mulValue.value()
+        resImg = Img * value
+        qImg = self.cv2_to_pixmap(resImg)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def log(self):
+        Img = cv2.imread(self.imgPath)
         c=255/np.log(1+np.max(Img))
         log_Img = c*(np.log(Img+1))
         log_Img = np.array(log_Img,dtype=np.uint8)
-        return log_Img
+        qImg = self.cv2_to_pixmap(log_Img)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
-    def gamma(self,Img,gamma_vl=1.0):
+    def gamma(self):
+        Img = cv2.imread(self.imgPath)
+        gamma_vl = self.gammaValue.value()
         gamma_img = np.array(255*(Img/255)**gamma_vl,dtype='uint8')
-        return gamma_img
-    def power(self,Img,c,gamma_vl):
+        qImg = self.cv2_to_pixmap(gamma_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def power(self):
+        Img = cv2.imread(self.imgPath)
+        gamma_vl = self.gammaValueP.value()
+        c = self.cValueP.value()
         gamma_img = np.array(c * (Img / 255) ** gamma_vl, dtype='uint8')
-        return gamma_img
+        qImg = self.cv2_to_pixmap(gamma_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
-    def plotting_histogram(self,Img):
+    def plotting_histogram(self):
+        Img = cv2.imread(self.imgPath)
         plt.hist(Img.ravel(),256,[0,256])
         plt.show()
     def equal_histogram(self,Img):
