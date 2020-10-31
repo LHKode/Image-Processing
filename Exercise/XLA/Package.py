@@ -106,7 +106,7 @@ class MyWindow(QMainWindow):
         self.tozeroValue = self.findChild(QSpinBox,'tozeroValue')
         self.tozeroThreshold.clicked.connect(self.threshold_tozero)
         # Otsu Threshold
-        # Error
+     
         self.otsuThreshold = self.findChild(QPushButton, 'otsuBtn')
         self.otsuValue = self.findChild(QSpinBox, 'otsuValue')
         self.otsuThreshold.clicked.connect(self.threshold_otsu)
