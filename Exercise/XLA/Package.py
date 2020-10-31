@@ -410,41 +410,36 @@ class MyWindow(QMainWindow):
         Img = cv2.imread(self.imgPath)
         img_threshold = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
                                               cv2.THRESH_BINARY,11, 2)
+        cv2.imread()
         qImg = self.cv2_to_pixmap(img_threshold)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_gaussian_C(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         img_gaussian = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                              cv2.THRESH_BINARY,11, 2)
+        cv2.imwrite('gauc.png',img_gaussian)
+        img_gaussian = cv2.imread('gauc.png')
         qImg = self.cv2_to_pixmap(img_gaussian)
         self.imgRes.setPixmap(QPixmap(qImg))
     def sobel(self):
         Img = cv2.imread(self.imgPath)
-        hx = np.array([[1,0,-1],
-                       [2,0,-2],
-                       [1,0,-1]])
-        hy = np.array([[1,2,1],
-                       [0,0,0],
-                       [-1,-2,-1]])
-        sobelX = cv2.Sobel(Img, cv2.CV_8U,1,0,hx)
-        sobelY = cv2.Sobel(Img, cv2.CV_8U,0,1,hy)
-        sum = np.abs(sobelX) + np.abs(sobelY)
-        Image_sobel = sum.astype(np.unit8)
-        qImg = self.cv2_to_pixmap(Image_sobel)
+        img_sobelx = cv2.Sobel(Img, cv2.CV_8U, 1, 0, ksize=5)
+        img_sobely = cv2.Sobel(Img, cv2.CV_8U, 0, 1, ksize=5)
+        img_sobel = img_sobelx + img_sobely
+        qImg = self.cv2_to_pixmap(img_sobel)
         self.imgRes.setPixmap(QPixmap(qImg))
-    def prewitt(self,Img):
+    def prewitt(self):
         Img = cv2.imread(self.imgPath)
-        hx = np.array([[-1,0,1],
+        hx = np.array([[1,1,1],
+                       [0,0,0],
+                       [-1,-1,-1]])
+        hy = np.array([[-1,0,1],
                        [-1,0,1],
                        [-1,0,1]])
-        hy = np.array([[-1,-1,-1],
-                       [0,0,0],
-                       [1,1,1]])
         prewittX = cv2.filter2D(Img, -1, hx)
         prewittY = cv2.filter2D(Img, -1, hy)
         sum = np.abs(prewittX) + np.abs(prewittY)
-        Image_prewitt = sum.astype(np.unit8)
-        qImg = self.cv2_to_pixmap(Image_prewitt)
+        qImg = self.cv2_to_pixmap(sum)
         self.imgRes.setPixmap(QPixmap(qImg))
 
 app = QApplication(sys.argv)
