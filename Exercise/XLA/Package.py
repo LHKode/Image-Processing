@@ -50,8 +50,37 @@ class MyWindow(QMainWindow):
         #Plotting Hist
         self.plotHistBtn = self.findChild(QPushButton,'plotHistBtn')
         self.plotHistBtn.clicked.connect(self.plotting_histogram)
-
+        #Equal Hist
+        self.equalHistBtn = self.findChild(QPushButton,'equalHistBtn')
+        self.equalHistBtn.clicked.connect(self.equal_histogram)
+        #filter2D
+        self.filter2DBtn = self.findChild(QPushButton,'filter2DBtn')
+        self.filter2DMatrix = self.findChild(QComboBox,'filter2DMatrix')
+        self.filter2DBtn.clicked.connect(self.filter2D)
+        #Gausian
+        self.gaussianBtn = self.findChild(QPushButton,'gauBtn')
+        self.gaussianBtn.clicked.connect(self.gaussian_blur)
         self.show()
+        #Blur
+
+        #Median
+
+        #Sharpen
+        #Threshold Otsu
+        self.otsuBtn = self.findChild(QPushButton,'otsuBtn')
+        self.otsuBtn.clicked.connect(self.threshold_otsu)
+        #Threshold Mean C
+        self.meanCBtn = self.findChild(QPushButton,'meanCBtn')
+        self.meanCBtn.clicked.connect(self.threshold_mean_C)
+        #Threshold Gaussian_C
+        self.gauCBtn = self.findChild(QPushButton,'gauCBtn')
+        self.gauCBtn.clicked.connect(self.threshold_gaussian_C)
+        #Sobel
+        self.sobelBtn = self.findChild(QPushButton,'sobelBtn')
+        self.sobelBtn.clicked.connect(self.sobel)
+        #Prewitt
+        self.prewittBtn = self.findChild(QPushButton,'prewittBtn')
+        self.prewittBtn.clicked.connect(self.prewitt)
     def cv2_to_pixmap(self, img):
         height, width, channel = img.shape
         bytesPerLine = 3 * width
@@ -120,12 +149,19 @@ class MyWindow(QMainWindow):
         Img = cv2.imread(self.imgPath)
         plt.hist(Img.ravel(),256,[0,256])
         plt.show()
-    def equal_histogram(self,Img):
+    def equal_histogram(self):
+        Img = cv2.imread(self.imgPath,0)
         equal_hist_img = cv2.equalizeHist(Img)
-        res = np.hstack((Img,equal_hist_img))
-        return res
+        cv2.imshow('',equal_hist_img)
+        plt.hist(equal_hist_img.ravel(), 256, [0, 256])
+        plt.show()
+        cv2.waitKey()
+        # qImg = self.cv2_to_pixmap(equal_hist_img)
+        # self.imgRes.setPixmap(QPixmap(qImg))
 
-    def filter2D(self, Img, Matrix):
+    def filter2D(self):
+        Img = cv2.imread(self.imgPath)
+        Matrix = self.filter2DMatrix.currentIndex() *2 +1
         ma = np.array([[0, 0, 0],
                        [1, 1, 1],
                        [0, 0, 0]])
@@ -144,11 +180,14 @@ class MyWindow(QMainWindow):
                            [0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0]])
         reImg = cv2.filter2D(Img, -1, ma / Matrix)
-        return reImg
+        qImg = self.cv2_to_pixmap(reImg)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
-    def gaussian_blur(self,Img,ksize=(5,5)):
-        gau_blur_img = cv2.GaussianBlur(Img,ksize=ksize,dst=0)
-        return gau_blur_img
+    def gaussian_blur(self):
+        Img = cv2.imread(self.imgPath)
+        gau_blur_img = cv2.GaussianBlur(Img,(5,5),0)
+        qImg = self.cv2_to_pixmap(gau_blur_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
     def blur(self,Img,ksize=(5,5)):
         blur_img = cv2.blur(Img,ksize=ksize)
         return blur_img
@@ -280,41 +319,49 @@ class MyWindow(QMainWindow):
     def threshold_trunc(self,Img):
         ret, img_trunc = cv2.threshold(Img, 127, 255, cv2.THRESH_TRUNC)
         return img_trunc
-    def threshold_otsu(self,Img):
+    def threshold_otsu(self):
+        Img = cv2.imread(self.imgPath,0)
         ret, img_otsu = cv2.threshold(Img, 0, 255, cv2.THRESH_OTSU)
-        return img_otsu
-    def threshold_mean_C(self,Img):
+        cv2.imwrite('otsu.png', img_otsu)
+        img_otsu = cv2.imread('otsu.png')
+        qImg = self.cv2_to_pixmap(img_otsu)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_mean_C(self):
+        Img = cv2.imread(self.imgPath,0)
         img_threshold = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
                                               cv2.THRESH_BINARY, 11, 2)
-        return img_threshold
-    def threshold_gaussian_C(self,Img):
+        cv2.imwrite('meanc.png', img_threshold)
+        img_threshold = cv2.imread('meanc.png')
+        qImg = self.cv2_to_pixmap(img_threshold)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def threshold_gaussian_C(self):
+        Img = cv2.imread(self.imgPath,0)
         img_gaussian = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                              cv2.THRESH_BINARY, 11, 2)
-        return img_gaussian
-    def sobel(self,Img):
-        hx = np.array([[1,0,-1],
-                       [2,0,-2],
-                       [1,0,-1]])
-        hy = np.array([[1,2,1],
+        cv2.imwrite('gauc.png',img_gaussian)
+        img_gaussian = cv2.imread('gauc.png')
+        qImg = self.cv2_to_pixmap(img_gaussian)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def sobel(self):
+        Img = cv2.imread(self.imgPath)
+        img_sobelx = cv2.Sobel(Img, cv2.CV_8U, 1, 0, ksize=5)
+        img_sobely = cv2.Sobel(Img, cv2.CV_8U, 0, 1, ksize=5)
+        img_sobel = img_sobelx + img_sobely
+        qImg = self.cv2_to_pixmap(img_sobel)
+        self.imgRes.setPixmap(QPixmap(qImg))
+    def prewitt(self):
+        Img = cv2.imread(self.imgPath)
+        hx = np.array([[1,1,1],
                        [0,0,0],
-                       [-1,-2,-1]])
-        sobelX = cv2.Sobel(Img, cv2.CV_8U,1,0,hx)
-        sobelY = cv2.Sobel(Img, cv2.CV_8U,0,1,hy)
-        sum = np.abs(sobelX) + np.abs(sobelY)
-        Image_sobel = sum.astype(np.unit8)
-        return Image_sobel
-    def prewitt(self,Img):
-        hx = np.array([[-1,0,1],
+                       [-1,-1,-1]])
+        hy = np.array([[-1,0,1],
                        [-1,0,1],
                        [-1,0,1]])
-        hy = np.array([[-1,-1,-1],
-                       [0,0,0],
-                       [1,1,1]])
         prewittX = cv2.filter2D(Img, -1, hx)
         prewittY = cv2.filter2D(Img, -1, hy)
-        sum = np.abs(prewittX) + np.abs(prewittY)
-        Image_prewitt = sum.astype(np.unit8)
-        return Image_prewitt
+        image_prewitt = np.abs(prewittX) + np.abs(prewittY)
+        qImg = self.cv2_to_pixmap(image_prewitt)
+        self.imgRes.setPixmap(QPixmap(qImg))
 
 app = QApplication(sys.argv)
 go = MyWindow()
