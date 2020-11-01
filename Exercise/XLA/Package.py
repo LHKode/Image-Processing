@@ -241,8 +241,9 @@ class MyWindow(QMainWindow):
         self.imgRes.setPixmap(QPixmap(qImg))
 
     def ideal_lp(self):
-        Img = cv2.imread(self.imgPath,0)
-        sx, sy = Img.shape[:2]
+        img = cv2.imread(self.fileName, 0)
+
+        sx, sy = img.shape[:2]
         x = np.arange(-(sx) / 2, (sx) / 2)  # tâm là (0,0)
         y = np.arange(-(sy) / 2, (sy) / 2)
 
@@ -257,14 +258,16 @@ class MyWindow(QMainWindow):
                 else:
                     H[i, j] = 0
 
-        g = np.fft.fftshift(np.fft.fft2(Img))  # fft and shift to center
+        g = np.fft.fftshift(np.fft.fft2(img))  # fft and shift to center
         img_apply = g * H  # apply filter
         img_ideal_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
-        img_ideal = np.uint8(img_ideal_lp)
-        cv2.imwrite('ideallp.png', img_ideal)
-        img_ideal = cv2.imread('ideallp.png')
-        qImg = self.cv2_to_pixmap(img_ideal)
-        self.imgRes.setPixmap(QPixmap(qImg))
+        img_ideal_lp = np.uint8(img_ideal_lp)
+        # cv2.imwrite('ideallp.png', img_ideal_lp)
+        # img_ideal = cv2.imread('ideallp.png')
+        # qImg = self.cv2_to_pixmap(img_ideal)
+        # self.imgRes.setPixmap(QPixmap(qImg))
+        cv2.imshow('',img_ideal_lp)
+        cv2.waitKey()
     def butterworth_lp(self):
         d0 = 50
         n = 2
@@ -288,7 +291,7 @@ class MyWindow(QMainWindow):
         qImg = self.cv2_to_pixmap(img_butterworth_lp)
         self.imgRes.setPixmap(QPixmap(qImg))
     def gaussian_lp(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         sigma = 50
         sx, sy = Img.shape[:2]
         x = np.arange(-sy / 2, sy / 2)
@@ -303,6 +306,8 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_gaussian_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_gaussian_lp = np.uint8(img_gaussian_lp)
+        cv2.imwrite('gaulp.png', img_gaussian_lp)
+        img_gaussian_lp = cv2.imread('gaulp.png')
         qImg = self.cv2_to_pixmap(img_gaussian_lp)
         self.imgRes.setPixmap(QPixmap(qImg))
     def ideal_hp(self):
@@ -351,22 +356,24 @@ class MyWindow(QMainWindow):
         qpImg = self.cv2_to_pixmap(img_butterworth_hp)
         self.imgRes.setPixmap(QPixmap(qpImg))
     def gaussian_hp(self):
-        Img = cv2.imread(self.imgPath)
-        sigma = 50
-        d0 = 50
-        sx, sy = Img.shape[:2]
+        img = cv2.imread(self.imgPath, 0)
+
+        sx, sy = img.shape[:2]
         x = np.arange(-sx / 2, sx / 2)  # tâm là (0,0)
         y = np.arange(-sy / 2, sy / 2)
 
         x, y = np.meshgrid(x, y)
         d = np.sqrt(x ** 2 + y ** 2)
 
+        H = d.copy()
         H = 1 - pow(math.e, (-d ** 2 / (2 * (50 ** 2))))  # cho sigma=50
 
-        g = np.fft.fftshift(np.fft.fft2(Img))  # fft and shift to center
+        g = np.fft.fftshift(np.fft.fft2(img))  # fft and shift to center
         img_apply = g * H  # apply filter
         img_gaussian_hp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
-        img_gaussian_hp = np.uint8(img_gaussian_hp <= d0)
+        img_gaussian_hp = np.uint8(img_gaussian_hp <= 50)
+        cv2.imwrite('gauhp.png', img_gaussian_hp)
+        img_gaussian_hp = cv2.imread('gauhp.png')
         qImg = self.cv2_to_pixmap(img_gaussian_hp)
         self.imgRes.setPixmap(QPixmap(qImg))
 

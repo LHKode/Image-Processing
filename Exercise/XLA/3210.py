@@ -40,8 +40,9 @@ g = np.fft.fftshift(np.fft.fft2(img))  # fft and shift to center
 img_apply = g * H  # apply filter
 img_gaussian_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
 img_gaussian_lp = np.uint8(img_gaussian_lp)
-# cv2.imshow('Orginal',img)
-# cv2.imshow('Filter',img_butterworth_lp)
+cv2.imshow('Orginal',img)
+cv2.imshow('Filter',img_gaussian_lp)
+cv2.waitKey()
 
 # ret,img_binary = cv2.threshold(img_butterworth_lp,127,255,cv2.THRESH_BINARY)
 # ret,img_trunc = cv2.threshold(img_butterworth_lp,127,255,cv2.THRESH_TRUNC)
