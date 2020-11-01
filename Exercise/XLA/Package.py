@@ -106,28 +106,21 @@ class MyWindow(QMainWindow):
         self.tozeroValue = self.findChild(QSpinBox,'tozeroValue')
         self.tozeroThreshold.clicked.connect(self.threshold_tozero)
         # Otsu Threshold
-     
         self.otsuThreshold = self.findChild(QPushButton, 'otsuBtn')
         self.otsuValue = self.findChild(QSpinBox, 'otsuValue')
         self.otsuThreshold.clicked.connect(self.threshold_otsu)
         # Adap Mean Threshold
-        # Error
         self.adapMeanBtn = self.findChild(QPushButton, 'adapMean')
         self.adapMeanBtn.clicked.connect(self.threshold_mean_C)
         # Adap Gauss Threshold
-        # Error
         self.adapGauBtn = self.findChild(QPushButton, 'adapGauss')
         self.adapGauBtn.clicked.connect(self.threshold_gaussian_C)
         # Sobel
-        # Error
         self.sobelBtn = self.findChild(QPushButton, 'sobelBtn')
         self.sobelBtn.clicked.connect(self.sobel)
         # Prewitt
-        # Error
         self.prewittButton = self.findChild(QPushButton,'prewittBtn')
         self.prewittButton.clicked.connect(self.prewitt)
-
-
 
         self.show()
     def cv2_to_pixmap(self, img):
@@ -142,17 +135,6 @@ class MyWindow(QMainWindow):
         pixmap = QPixmap(self.imgPath)
         self.img = cv2.imread(self.imgPath)
         self.imgOriginal.setPixmap(QPixmap(pixmap))
-    # def type(self):
-    #     image = self.ffImage
-    #     value = self.sizeImg.currentIndex()*2+1
-    #     if(self.typeImg.currentIndex() == 1):
-    #         image = cv2.blur(self.ffImage, (value,value))
-    #     elif(self.typeImg.currentIndex() == 2):
-    #         image = cv2.GaussianBlur(self.ffImage, (value,value),0)
-    #     elif(self.typeImg.currentIndex() == 3):
-    #         image = cv2.medianBlur(self.ffImage,value)
-    #     # cv2.imshow('test',image)
-    #     self.labelImg.setPixmap(QPixmap(image))
 
     def light(self):
         Img = cv2.imread(self.imgPath)
@@ -199,11 +181,15 @@ class MyWindow(QMainWindow):
         plt.hist(Img.ravel(),256,[0,256])
         plt.show()
     def equalize_histogram(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         equal_hist_img = cv2.equalizeHist(Img)
-        res = np.hstack((Img,equal_hist_img))
         plt.hist(equal_hist_img.ravel(),256,[0,256])
+        cv2.imwrite('equal.png', equal_hist_img)
+        equal_hist_img = cv2.imread('equal.png')
+        qImg = self.cv2_to_pixmap(equal_hist_img)
+        self.imgRes.setPixmap(QPixmap(qImg))
         plt.show()
+
 
     def filter2D(self, Matrix):
         Img = cv2.imread(self.imgPath)
@@ -255,7 +241,7 @@ class MyWindow(QMainWindow):
         self.imgRes.setPixmap(QPixmap(qImg))
 
     def ideal_lp(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         sx, sy = Img.shape[:2]
         x = np.arange(-(sx) / 2, (sx) / 2)  # tâm là (0,0)
         y = np.arange(-(sy) / 2, (sy) / 2)
@@ -275,6 +261,8 @@ class MyWindow(QMainWindow):
         img_apply = g * H  # apply filter
         img_ideal_lp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
         img_ideal = np.uint8(img_ideal_lp)
+        cv2.imwrite('ideallp.png', img_ideal)
+        img_ideal = cv2.imread('ideallp.png')
         qImg = self.cv2_to_pixmap(img_ideal)
         self.imgRes.setPixmap(QPixmap(qImg))
     def butterworth_lp(self):
@@ -341,7 +329,7 @@ class MyWindow(QMainWindow):
         qImg = self.cv2_to_pixmap(img_ideal_hp)
         self.imgRes.setPixmap(QPixmap(qImg))
     def butterworth_hp(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         d0 =50
         n = 2
         sx, sy = Img.shape[:2]
@@ -383,34 +371,43 @@ class MyWindow(QMainWindow):
         self.imgRes.setPixmap(QPixmap(qImg))
 
     def threshold_binary(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         value = self.binaryValue.value()
         ret, img_binary = cv2.threshold(Img, value, 255, cv2.THRESH_BINARY)
+        cv2.imwrite('binary.png', img_binary)
+        img_binary = cv2.imread('binary.png')
         qImg = self.cv2_to_pixmap(img_binary)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_tozero(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         value = self.tozeroValue.value()
         ret, img_tozero = cv2.threshold(Img, value, 255, cv2.THRESH_TOZERO)
+        cv2.imwrite('tozero.png', img_tozero)
+        img_tozero = cv2.imread('tozero.png')
         qImg = self.cv2_to_pixmap(img_tozero)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_trunc(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         value = self.truncValue.value()
         ret, img_trunc = cv2.threshold(Img, value, 255, cv2.THRESH_TRUNC)
+        cv2.imwrite('otsu.png', img_trunc)
+        img_trunc = cv2.imread('otsu.png')
         qImg = self.cv2_to_pixmap(img_trunc)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_otsu(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         value = self.otsuValue.value()
         ret, img_otsu = cv2.threshold(Img, value, 255, cv2.THRESH_OTSU)
+        cv2.imwrite('otsu.png', img_otsu)
+        img_otsu = cv2.imread('otsu.png')
         qImg = self.cv2_to_pixmap(img_otsu)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_mean_C(self):
-        Img = cv2.imread(self.imgPath)
+        Img = cv2.imread(self.imgPath,0)
         img_threshold = cv2.adaptiveThreshold(Img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, \
                                               cv2.THRESH_BINARY,11, 2)
-        cv2.imread()
+        cv2.imwrite('meanc.png', img_threshold)
+        img_threshold = cv2.imread('meanc.png')
         qImg = self.cv2_to_pixmap(img_threshold)
         self.imgRes.setPixmap(QPixmap(qImg))
     def threshold_gaussian_C(self):
