@@ -3,6 +3,7 @@ import sys
 import cv2
 import math
 import numpy as np
+from random import random
 from PyQt5 import uic, QtGui
 from matplotlib import pyplot as plt
 from PyQt5.QtCore import *
@@ -121,6 +122,12 @@ class MyWindow(QMainWindow):
         # Prewitt
         self.prewittButton = self.findChild(QPushButton,'prewittBtn')
         self.prewittButton.clicked.connect(self.prewitt)
+        # Linear
+        self.linearBtn = self.findChild(QPushButton,'linearBtn')
+        self.meanValue = self.findChild(QSpinBox,'meanValue')
+        self.stdValue = self.findChild(QSpinBox, 'stdValue')
+        self.linearBtn.clicked.connect(self.linear)
+        
 
         self.show()
     def cv2_to_pixmap(self, img):
@@ -352,7 +359,9 @@ class MyWindow(QMainWindow):
         g = np.fft.fftshift(np.fft.fft2(Img))  # fft and shift to center
         img_apply = g * H  # apply filter
         img_butterworth_hp = abs(np.fft.ifft2(np.fft.ifftshift(img_apply)))
-        # img_butterworth_hp = np.uint8(img_butterworth_hp)
+        img_butterworth_hp = np.uint8(img_butterworth_hp)
+        cv2.imwrite('buttHp.png', img_butterworth_hp)
+        img_butterworth_hp = cv2.imread('buttHp.png')
         qpImg = self.cv2_to_pixmap(img_butterworth_hp)
         self.imgRes.setPixmap(QPixmap(qpImg))
     def gaussian_hp(self):
@@ -445,7 +454,20 @@ class MyWindow(QMainWindow):
         sum = np.abs(prewittX) + np.abs(prewittY)
         qImg = self.cv2_to_pixmap(sum)
         self.imgRes.setPixmap(QPixmap(qImg))
+    def linear(self):
+        Img = cv2.imread(self.imgPath)
+        imgMean = np.mean(Img)
+        imgStd = np.std(Img)
+        outMean = self.meanValue.value()
+        outStd = self.stdValue.value()
 
+        scale = outStd / imgStd
+        shift = outMean - scale*imgMean
+        imgLinear = shift + scale*Img
+        cv2.imwrite('linearImg.jpg', imgLinear)
+        image = cv2.imread('linearImg.jpg')
+        qImg = self.cv2_to_pixmap(image)
+        self.imgRes.setPixmap(QPixmap(qImg))
 app = QApplication(sys.argv)
 go = MyWindow()
 app.exec_()
