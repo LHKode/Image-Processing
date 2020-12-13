@@ -1,35 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Created on June 10 13:01:05 2018
-
-@author: jzh
-
 usage:
 1. use mouse to select foreground
 2. click right mouse bottom to change mode of selecting background(or press '1')
 3. press '4'/'5' to clear foreground/background mask(or press '2' to clear all)
 4. press '3' to run grabcut(or press 'c')
+5. press Esc key to close.
 """
 
 import numpy as np
 import cv2
 
-# 载入图片以及初始化
 img = cv2.imread('ly.jpg')
-# GrabCut所需内部调用的参数
 bgdModel = np.zeros((1,65),np.float64)
 fgdModel = np.zeros((1,65),np.float64)
 iteration = 10
-# 鼠标点击的时候变为True
 drawing = False
-# 如果为True, 选择前景。点击'm'或'1'或右键切换到背景选择
 mode = True
-# 记录鼠标点击时的位置
 ix,iy = -1,-1
-# 绘制点的半径
 r = 8
 
-# 将图片,以及选择的前景,背景一起显示出来
 def merge(mask_fore, mask_back, img):
     mask = mask_fore[:,:,1:2]/255 + mask_back[:,:,2:3]/255
     if np.max(np.max(np.max(mask)))>1:
@@ -37,8 +27,6 @@ def merge(mask_fore, mask_back, img):
     mask = mask.astype('uint8')
     return True, mask_fore + mask_back + img*(1-mask)
 
-# 鼠标回调函数
-# 前景用绿色,背景用红色,不允许二者出现重叠!
 def draw_circle(event,x,y,flags,param):
     global ix,iy,drawing,mode,r
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -61,7 +49,6 @@ def draw_circle(event,x,y,flags,param):
         else:
             cv2.circle(mask_back,(x,y),r,(0,0,255),-1)
             
-# 初始化前景和背景的mask
 mask_fore = np.zeros_like(img)
 mask_back = np.zeros_like(img)
 cv2.namedWindow('image')
